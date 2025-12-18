@@ -1,5 +1,17 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import spawn from 'cross-spawn';
 import { echoCommand } from './utils';
+
+function getAliasName(): string {
+  try {
+    const pkgPath = path.join(__dirname, '..', 'package.json');
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    return Object.keys(pkg.bin || {})[0] || 'n';
+  } catch {
+    return 'n';
+  }
+}
 
 /**
  * Run an npm command with inherited stdio
@@ -39,26 +51,27 @@ export function runLint(extraArgs: string[] = []): number {
  * Show help message
  */
 export function showHelp(): void {
+  const n = getAliasName();
   console.log(`
-n - npm alias CLI
+${n} - npm alias CLI
 
 Usage:
-  n                     Show this help
-  n <script>            npm run <script> (if script is dev, build, start, test)
-  n lint                npm run lint -- --fix --quiet
-  n r <script>          npm run <script>
-  n <cmd> [args]        npm <cmd> [args]
+  ${n}                     Show this help
+  ${n} <script>            npm run <script> (if script is dev, build, start, test)
+  ${n} lint                npm run lint -- --fix --quiet
+  ${n} r <script>          npm run <script>
+  ${n} <cmd> [args]        npm <cmd> [args]
 
 Examples:
-  n dev                 npm run dev
-  n build               npm run build
-  n lint                npm run lint -- --fix --quiet
-  n r custom-script     npm run custom-script
-  n i lodash            npm install lodash
-  n test                npm run test
+  ${n} dev                 npm run dev
+  ${n} build               npm run build
+  ${n} lint                npm run lint -- --fix --quiet
+  ${n} r custom-script     npm run custom-script
+  ${n} i lodash            npm install lodash
+  ${n} test                npm run test
 
 Tab Completion:
-  n completion install    Install shell completion
-  n completion uninstall  Remove shell completion
+  ${n} completion install    Install shell completion
+  ${n} completion uninstall  Remove shell completion
 `);
 }
