@@ -8,11 +8,25 @@ A lightweight CLI wrapper for npm with shortcuts and tab completion.
 git clone git@github.com:bhawanishiv/npm-alias-cli.git
 cd npm-alias-cli
 npm install
-npm run setup
+./setup.sh
 source ~/.zshrc
 ```
 
-That's it! The `setup` script builds, links globally, and installs tab completion.
+### Custom Alias Name
+
+By default, the CLI uses `n` as the alias. To use a different name:
+
+```bash
+./setup.sh myalias
+source ~/.zshrc
+```
+
+Then use `myalias` instead of `n`:
+
+```bash
+myalias dev          # npm run dev
+myalias i lodash     # npm install lodash
+```
 
 ## Usage
 

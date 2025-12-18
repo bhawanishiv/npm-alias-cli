@@ -2,9 +2,23 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
-const COMPLETION_SCRIPT = `
-###-begin-n-completion-###
-_n_cli_completion() {
+// Get alias name from package.json
+function getAliasName(): string {
+  try {
+    const pkgPath = path.join(__dirname, '..', 'package.json');
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    return Object.keys(pkg.bin || {})[0] || 'n';
+  } catch {
+    return 'n';
+  }
+}
+
+const ALIAS_NAME = getAliasName();
+
+function getCompletionScript(): string {
+  return `
+###-begin-${ALIAS_NAME}-completion-###
+_${ALIAS_NAME}_cli_completion() {
   local -a completions scripts npm_commands known_scripts
 
   known_scripts=("dev:npm run dev" "build:npm run build" "start:npm run start" "test:npm run test" "lint:npm run lint -- --fix --quiet")
@@ -20,7 +34,7 @@ _n_cli_completion() {
   case $CURRENT in
     2)
       completions=("r:run any npm script" "completion:manage completion" $known_scripts $npm_commands)
-      _describe 'n command' completions
+      _describe '${ALIAS_NAME} command' completions
       ;;
     3)
       case \${words[2]} in
@@ -39,22 +53,23 @@ _n_cli_completion() {
     *) _normal ;;
   esac
 }
-compdef _n_cli_completion n
-###-end-n-completion-###
+compdef _${ALIAS_NAME}_cli_completion ${ALIAS_NAME}
+###-end-${ALIAS_NAME}-completion-###
 `.trim();
+}
 
 /**
  * Get the completion file path
  */
 export function getCompletionFilePath(): string {
-  return path.join(os.homedir(), '.n-completion.zsh');
+  return path.join(os.homedir(), `.${ALIAS_NAME}-completion.zsh`);
 }
 
 /**
  * Print the zsh completion script
  */
 export function printCompletionScript(): void {
-  console.log(COMPLETION_SCRIPT);
+  console.log(getCompletionScript());
 }
 
 /**
@@ -65,15 +80,16 @@ export function installCompletion(): void {
   const zshrcPath = path.join(os.homedir(), '.zshrc');
 
   // Write completion file
-  fs.writeFileSync(completionFile, COMPLETION_SCRIPT + '\n');
+  fs.writeFileSync(completionFile, getCompletionScript() + '\n');
   console.log(`Completion script written to: ${completionFile}`);
 
   // Check if already sourced in .zshrc
   const zshrc = fs.readFileSync(zshrcPath, 'utf8');
-  const sourceCmd = `[ -f ~/.n-completion.zsh ] && source ~/.n-completion.zsh`;
+  const completionFileName = `.${ALIAS_NAME}-completion.zsh`;
+  const sourceCmd = `[ -f ~/${completionFileName} ] && source ~/${completionFileName}`;
 
-  if (!zshrc.includes('.n-completion.zsh')) {
-    fs.appendFileSync(zshrcPath, `\n# n CLI completion\n${sourceCmd}\n`);
+  if (!zshrc.includes(completionFileName)) {
+    fs.appendFileSync(zshrcPath, `\n# ${ALIAS_NAME} CLI completion\n${sourceCmd}\n`);
     console.log('Added source command to ~/.zshrc');
   }
 
@@ -86,6 +102,7 @@ export function installCompletion(): void {
 export function uninstallCompletion(): void {
   const completionFile = getCompletionFilePath();
   const zshrcPath = path.join(os.homedir(), '.zshrc');
+  const completionFileName = `.${ALIAS_NAME}-completion.zsh`;
 
   // Remove completion file
   if (fs.existsSync(completionFile)) {
@@ -96,10 +113,11 @@ export function uninstallCompletion(): void {
   // Remove from .zshrc
   if (fs.existsSync(zshrcPath)) {
     let zshrc = fs.readFileSync(zshrcPath, 'utf8');
-    zshrc = zshrc.replace(
-      /\n# n CLI completion\n\[ -f ~\/.n-completion\.zsh \] && source ~\/.n-completion\.zsh\n?/g,
-      ''
+    const regex = new RegExp(
+      `\\n# ${ALIAS_NAME} CLI completion\\n\\[ -f ~\\/${completionFileName.replace('.', '\\.')} \\] && source ~\\/${completionFileName.replace('.', '\\.')}\\n?`,
+      'g'
     );
+    zshrc = zshrc.replace(regex, '');
     fs.writeFileSync(zshrcPath, zshrc);
     console.log('Removed source command from ~/.zshrc');
   }
