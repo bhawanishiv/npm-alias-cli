@@ -1,0 +1,30 @@
+{
+  "name": "npm-alias-cli",
+  "version": "1.0.0",
+  "description": "A CLI wrapper for npm with shortcuts and tab completion",
+  "main": "dist/index.js",
+  "bin": {
+    "n": "./bin/n.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "npm",
+    "cli",
+    "alias",
+    "completion"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cross-spawn": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}
