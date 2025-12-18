@@ -9,6 +9,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+    "postinstall": "npm run build",
+    "setup": "npm run build && npm link && n completion install",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

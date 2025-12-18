@@ -5,16 +5,15 @@ A lightweight CLI wrapper for npm with shortcuts and tab completion.
 ## Installation
 
 ```bash
-git clone git@github.com:bhawanishiv/npm-alias-cli.git
-cd npm-alias-cli
-npm install
-npm run build
-npm link
+git clone git@github.com:bhawanishiv/npm-alias-cli.git && cd npm-alias-cli && npm install && npm link && n completion install && source ~/.zshrc
 ```
 
-### Enable Tab Completion
+Or step by step:
 
 ```bash
+git clone git@github.com:bhawanishiv/npm-alias-cli.git
+cd npm-alias-cli
+npm install && npm link
 n completion install
 source ~/.zshrc
 ```
