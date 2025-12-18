@@ -1,109 +1,70 @@
-# n - npm alias CLI
+# npm-alias-cli
 
 A lightweight CLI wrapper for npm with shortcuts and tab completion.
 
 ## Installation
 
 ```bash
-git clone git@github.com:bhawanishiv/npm-alias-cli.git
-cd npm-alias-cli
-npm install
-./setup.sh
+npm install -g npm-alias-cli
+n completion install
 source ~/.zshrc
 ```
 
 ### Custom Alias Name
 
-By default, the CLI uses `n` as the alias. To use a different name:
+To use a custom alias (e.g., `np` instead of `n`):
 
 ```bash
-./setup.sh myalias
+git clone https://github.com/bhawanishiv/npm-alias-cli.git
+cd npm-alias-cli
+npm install
+./setup.sh np
 source ~/.zshrc
-```
-
-Then use `myalias` instead of `n`:
-
-```bash
-myalias dev          # npm run dev
-myalias i lodash     # npm install lodash
 ```
 
 ## Usage
 
-```bash
-n                     # Show help
-n <script>            # npm run <script> (for known scripts)
-n r <script>          # npm run <script> (any script)
-n <cmd> [args]        # npm <cmd> [args]
-```
+| Command | Description |
+|---------|-------------|
+| `n` | Show help |
+| `n <script>` | `npm run <script>` (for dev, build, start, test) |
+| `n lint` | `npm run lint -- --fix --quiet` |
+| `n r <script>` | `npm run <script>` (any script) |
+| `n <cmd> [args]` | `npm <cmd> [args]` |
 
 ## Examples
 
-### Run Scripts
-
 ```bash
+# Run scripts
 n dev                 # npm run dev
 n build               # npm run build
 n start               # npm run start
 n test                # npm run test
-```
 
-### Special Lint Command
-
-```bash
+# Lint with auto-fix
 n lint                # npm run lint -- --fix --quiet
-n lint src/           # npm run lint -- --fix --quiet src/
-```
 
-### Run Any Script
-
-```bash
-n r custom-script     # npm run custom-script
+# Run any script
 n r migrate           # npm run migrate
-```
+n r custom-script     # npm run custom-script
 
-### npm Commands
-
-```bash
+# npm commands
 n i lodash            # npm install lodash
 n i -D typescript     # npm install -D typescript
 n un lodash           # npm uninstall lodash
 n outdated            # npm outdated
-n ls                  # npm ls
-n init                # npm init
 ```
-
-## Known Scripts
-
-These scripts are automatically mapped to `npm run`:
-
-- `dev`
-- `build`
-- `start`
-- `test`
-- `lint` (with `--fix --quiet`)
 
 ## Tab Completion
 
-Supports zsh with completions for:
-
+Zsh completions for:
 - Known scripts (dev, build, start, test, lint)
 - npm commands (install, uninstall, update, etc.)
 - Scripts from `package.json` (after `n r`)
 
-### Manage Completion
-
 ```bash
-n completion install    # Install shell completion
-n completion uninstall  # Remove shell completion
-n completion --zsh      # Print completion script
-```
-
-## Development
-
-```bash
-npm run build    # Compile TypeScript
-npm run dev      # Watch mode
+n completion install    # Install completion
+n completion uninstall  # Remove completion
 ```
 
 ## License

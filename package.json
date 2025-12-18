@@ -6,19 +6,28 @@
   "bin": {
     "n": "./bin/n.js"
   },
+  "files": [
+    "dist",
+    "bin",
+    "setup.sh"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "postinstall": "npm run build",
     "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhawanishiv/npm-alias-cli.git"
   },
   "keywords": [
     "npm",
     "cli",
     "alias",
-    "completion"
+    "completion",
+    "shortcut"
   ],
-  "author": "",
+  "author": "bhawanishiv",
   "license": "MIT",
   "dependencies": {
     "cross-spawn": "^7.0.3"
